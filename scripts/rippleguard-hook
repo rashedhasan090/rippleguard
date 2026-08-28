@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# rippleguard-hook — pre-commit / pre-push companion
+# Fails the git operation when the trust-surface delta introduces high-severity expansions.
+# Defensive only: it never exploits findings; it blocks expansions so maintainers can harden.
+set -euo pipefail
+
+mode="auto"
+if [[ "${1:-}" == "pre-commit" || "${1:-}" == "pre-push" ]]; then
+  mode="$1"
+  shift
+fi
+
+# Infer from hook filename when installed as .git/hooks/pre-commit
+if [[ "$mode" == "auto" ]]; then
+  base="$(basename -- "${0}")"
+  case "$base" in
+    pre-commit) mode="pre-commit" ;;
+    pre-push) mode="pre-push" ;;
+    *) mode="pre-commit" ;;
+  esac
+fi
+
+find_rippleguard() {
+  if command -v rippleguard >/dev/null 2>&1; then
+    printf '%s\n' "rippleguard"
+    return 0
+  fi
+  if [[ -n "${VIRTUAL_ENV:-}" && -x "${VIRTUAL_ENV}/bin/rippleguard" ]]; then
+    printf '%s\n' "${VIRTUAL_ENV}/bin/rippleguard"
+    return 0
+  fi
+  if [[ -x ".venv/bin/rippleguard" ]]; then
+    printf '%s\n' ".venv/bin/rippleguard"
+    return 0
+  fi
+  if python3 -c "import rippleguard" >/dev/null 2>&1; then
+    printf '%s\n' "python3 -m rippleguard"
+    return 0
+  fi
+  return 1
+}
+
+if ! RG="$(find_rippleguard)"; then
+  echo "rippleguard-hook: rippleguard is not installed. pip install -e . && retry." >&2
+  exit 2
+fi
+
+# Quote every expansion. Never eval.
+target="${RIPPLEGUARD_TARGET:-.}"
+fail_on="${RIPPLEGUARD_FAIL_ON:-high}"
+
+echo "rippleguard-hook: checking trust-surface delta (${mode}) under ${target}" >&2
+
+set +e
+# shellcheck disable=SC2086
+if [[ "$RG" == "python3 -m rippleguard" ]]; then
+  python3 -m rippleguard hook run --mode "${mode}" --fail-on "${fail_on}" --no-mermaid "${target}"
+  code=$?
+else
+  "${RG}" hook run --mode "${mode}" --fail-on "${fail_on}" --no-mermaid "${target}"
+  code=$?
+fi
+set -e
+
+if [[ "${code}" -eq 1 ]]; then
+  echo "rippleguard-hook: blocked. New high-severity trust surface detected." >&2
+  echo "rippleguard-hook: harden the findings above, or run: rippleguard diff" >&2
+  exit 1
+fi
+if [[ "${code}" -ge 2 ]]; then
+  echo "rippleguard-hook: tool error (exit ${code})." >&2
+  exit 2
+fi
+exit 0

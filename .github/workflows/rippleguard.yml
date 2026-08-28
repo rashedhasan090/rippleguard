@@ -1,0 +1,59 @@
+name: Rippleguard dogfood
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-self:
+    name: Scan product source (must stay clean)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318eca7822d2ff68d7d79a8cdeb # v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install Rippleguard
+        run: pip install -e ".[dev]"
+
+      - name: Dogfood scan (exclude labeled fixtures)
+        run: rippleguard scan . --exclude fixtures --exclude tests --fail-on high
+
+  fixtures-detect:
+    name: Insecure fixtures must be flagged
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318eca7822d2ff68d7d79a8cdeb # v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install Rippleguard
+        run: pip install -e ".[dev]"
+
+      - name: Expect high-severity surface on fixtures/insecure
+        run: |
+          set +e
+          rippleguard scan fixtures/insecure --fail-on high --no-json-block
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "expected exit 1 from insecure fixtures, got $code"
+            exit 1
+          fi
+
+      - name: Expect a clean high-severity scan on fixtures/fixed
+        run: rippleguard scan fixtures/fixed --fail-on high --no-json-block
+
+      - name: Unit tests
+        run: pytest

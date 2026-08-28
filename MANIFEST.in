@@ -1,0 +1,6 @@
+# Include the hook script in sdists
+include scripts/rippleguard-hook
+include LICENSE README.md
+recursive-include docs *.png *.svg *.mp4 *.md
+recursive-include fixtures *
+recursive-include rippleguard/data *
