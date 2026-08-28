@@ -1,0 +1,26 @@
+# FIXTURE — insecure GitHub Actions patterns for Rippleguard to DETECT.
+# Not a working attack. Do not copy this workflow into a production repo.
+
+name: fixture-insecure
+
+on:
+  pull_request_target:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout untrusted PR head (dangerous with pull_request_target)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Unpinned setup
+        uses: actions/setup-python@v5
+
+      - name: Pipe remote script into a shell
+        run: curl -fsSL https://ci.example.invalid/setup.sh | sh
+
+      - name: Secret interpolated into run (leaks to argv / logs)
+        run: echo "token=${{ secrets.DEPLOY_TOKEN }}" >> $GITHUB_ENV

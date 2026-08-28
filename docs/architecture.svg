@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780">
+  <rect width="1400" height="780" fill="#0c1220"/>
+  <text x="48" y="58" font-family="DejaVu Sans, sans-serif" font-size="36" font-weight="700" fill="#40c8b4">Rippleguard</text>
+  <text x="300" y="56" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#8c9bb4">defensive trust-surface pipeline</text>
+
+  <rect x="60" y="140" width="400" height="160" rx="18" fill="#141e34"/>
+  <rect x="60" y="140" width="8" height="160" fill="#40c8b4"/>
+  <text x="88" y="178" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#ffffff">Python AST</text>
+  <text x="88" y="214" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">subprocess  eval  pickle</text>
+  <text x="88" y="238" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">yaml.load  requests  open</text>
+
+  <rect x="500" y="140" width="400" height="160" rx="18" fill="#141e34"/>
+  <rect x="500" y="140" width="8" height="160" fill="#40c8b4"/>
+  <text x="528" y="178" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#ffffff">Bash (best-effort)</text>
+  <text x="528" y="214" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">curl|bash  eval  source</text>
+  <text x="528" y="238" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">unquoted $VAR  nc  ssh</text>
+
+  <rect x="940" y="140" width="400" height="160" rx="18" fill="#141e34"/>
+  <rect x="940" y="140" width="8" height="160" fill="#40c8b4"/>
+  <text x="968" y="178" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#ffffff">GitHub Actions YAML</text>
+  <text x="968" y="214" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">unpinned actions  run:</text>
+  <text x="968" y="238" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">PR-target  secrets in run</text>
+
+  <polygon points="260,316 248,300 272,300" fill="#ffb05c"/>
+  <polygon points="700,316 688,300 712,300" fill="#ffb05c"/>
+  <polygon points="1140,316 1128,300 1152,300" fill="#ffb05c"/>
+
+  <rect x="200" y="340" width="1000" height="160" rx="18" fill="#141e34"/>
+  <text x="230" y="384" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#ffb05c">Unified trust graph</text>
+  <text x="230" y="424" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#e6ecf5">nodes: files · commands · hosts · env vars · actions · secret-shapes</text>
+  <text x="230" y="460" font-family="DejaVu Sans Mono, monospace" font-size="15" fill="#8c9bb4">edges: invokes  ’  reads  ’  reaches  ’  uses  ’  expands</text>
+
+  <polygon points="700,548 688,532 712,532" fill="#ffb05c"/>
+
+  <rect x="200" y="560" width="480" height="160" rx="18" fill="#141e34"/>
+  <text x="230" y="604" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#ffffff">Git delta</text>
+  <text x="230" y="644" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">HEAD vs HEAD~1   or   --old / --new</text>
+  <text x="230" y="680" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#40c8b4">Only NEW surface is reported</text>
+
+  <rect x="720" y="560" width="480" height="160" rx="18" fill="#141e34"/>
+  <text x="750" y="604" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#ffffff">Harden + enforce</text>
+  <text x="750" y="644" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#8c9bb4">human report · JSON · mermaid</text>
+  <text x="750" y="680" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#40c8b4">pre-commit hook fails on high delta</text>
+</svg>
